@@ -1,7 +1,8 @@
 // Code modified by Tharun
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth';
+
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -9,7 +10,7 @@ const prisma = new PrismaClient();
 export async function POST(request: NextRequest) {
   try {
     // Get user session
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions) as { user?: { email?: string; name?: string } } | null;
     
     if (!session?.user?.email) {
       return NextResponse.json(
@@ -39,7 +40,6 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const {
       billingInfo,
-      paymentInfo,
       cart,
       subtotal,
       shipping,
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
         
         // Order Items
         orderItems: {
-          create: cart.map((item: any) => ({
+          create: cart.map((item: { id: string; name: string; img: string; price: number; quantity: number }) => ({
             productId: item.id,
             productName: item.name,
             productImg: item.img,
@@ -135,10 +135,10 @@ export async function POST(request: NextRequest) {
 }
 
 // GET endpoint to retrieve user's orders
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Get user session
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions) as { user?: { email?: string; name?: string } } | null;
     
     if (!session?.user?.email) {
       return NextResponse.json(

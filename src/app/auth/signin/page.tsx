@@ -2,10 +2,10 @@
 "use client";
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 
-export default function SignIn() {
+function SignInContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/account';
@@ -221,5 +221,13 @@ export default function SignIn() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SignIn() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignInContent />
+    </Suspense>
   );
 }

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { useCart, type CartItem } from '../../context/CartContext';
+import { useCart } from '../../context/CartContext';
 import { loadStripe } from '@stripe/stripe-js/pure';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
@@ -86,7 +86,7 @@ export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentComplete, setPaymentComplete] = useState(false);
   const [isSecureConnection, setIsSecureConnection] = useState(true);
-  const [stripePromise, setStripePromise] = useState<any>(null);
+  const [stripePromise, setStripePromise] = useState<Promise<import('@stripe/stripe-js').Stripe | null> | null>(null);
   const [clientSecret, setClientSecret] = useState('');
   
   // Calculate order totals
@@ -188,7 +188,7 @@ export default function CheckoutPage() {
             </div>
             <div className="ml-3">
               <p className="text-sm text-yellow-700">
-                Your cart is empty. Please add items to your cart before checking out.
+                We're sorry, but we can't process your payment at this time. Please add items to your cart before checking out.
               </p>
             </div>
           </div>

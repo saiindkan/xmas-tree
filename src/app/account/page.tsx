@@ -8,7 +8,18 @@ import Link from 'next/link';
 export default function AccountPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [orders, setOrders] = useState<any[]>([]);
+  const [orders, setOrders] = useState<Array<{
+    id: string;
+    orderNumber: string;
+    total: number;
+    status: string;
+    createdAt: string;
+    orderItems: Array<{
+      productName: string;
+      quantity: number;
+      price: number;
+    }>;
+  }>>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

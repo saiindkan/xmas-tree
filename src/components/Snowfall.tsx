@@ -38,7 +38,7 @@ export default function Snowfall() {
 
     function update() {
       for (let i = 0; i < snowflakes.length; i++) {
-        let s = snowflakes[i];
+        const s = snowflakes[i];
         s.y += s.d;
         s.x += Math.sin(s.y / 30) * 0.5;
         if (s.y > height) {
