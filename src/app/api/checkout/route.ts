@@ -1,190 +1,122 @@
-// Code modified by Tharun
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
-
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { supabaseAdmin } from '@/lib/supabase';
 
 export async function POST(request: NextRequest) {
   try {
-    // Get user session
-    const session = await getServerSession(authOptions) as { user?: { email?: string; name?: string } } | null;
-    
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
+    const userId = session.user.id;
 
-    // Get user from database or create if OAuth user doesn't exist
-    let user = await prisma.user.findUnique({
-      where: { email: session.user.email }
-    });
-
-    if (!user) {
-      // Create user for OAuth users who don't exist in database yet
-      user = await prisma.user.create({
-        data: {
-          email: session.user.email,
-          name: session.user.name || 'OAuth User',
-          password: '' // OAuth users don't have passwords
-        }
-      });
-      console.log(`[Checkout] Created new OAuth user: ${user.email}`);
-    }
-
-    // Parse request body
     const body = await request.json();
-    const {
-      billingInfo,
-      cart,
-      subtotal,
-      shipping,
-      tax,
-      total
-    } = body;
+    const { billingInfo, cart, subtotal, shipping, tax, total } = body;
 
-    // Validate required fields
     if (!billingInfo || !cart || cart.length === 0) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Generate unique order number
     const orderNumber = `XTS-${Date.now()}-${Math.random().toString(36).substr(2, 6).toUpperCase()}`;
 
-    // Create order in database
-    const order = await prisma.order.create({
-      data: {
-        orderNumber,
-        userId: user.id,
-        
-        // Billing Information
-        firstName: billingInfo.firstName,
-        lastName: billingInfo.lastName,
+    const { data: order, error: orderError } = await supabaseAdmin
+      .from('orders')
+      .insert({
+        order_number: orderNumber,
+        user_id: userId,
+        first_name: billingInfo.firstName,
+        last_name: billingInfo.lastName,
         email: billingInfo.email,
         phone: billingInfo.phone,
         address: billingInfo.address,
         city: billingInfo.city,
         state: billingInfo.state,
-        zipCode: billingInfo.zipCode,
+        zip_code: billingInfo.zipCode,
         country: billingInfo.country || 'United States',
-        
-        // Order Totals
         subtotal: parseFloat(subtotal.toString()),
         shipping: parseFloat(shipping.toString()),
         tax: parseFloat(tax.toString()),
         total: parseFloat(total.toString()),
-        
-        // Order Status
         status: 'pending',
-        paymentStatus: 'pending',
-        
-        // Order Items
-        orderItems: {
-          create: cart.map((item: { id: string; name: string; img: string; price: number; quantity: number }) => ({
-            productId: item.id,
-            productName: item.name,
-            productImg: item.img,
-            price: parseFloat(item.price.toString()),
-            quantity: item.quantity
-          }))
-        }
-      },
-      include: {
-        orderItems: true
-      }
-    });
+        payment_status: 'pending',
+      })
+      .select()
+      .single();
 
-    // In a real application, you would process payment here
-    // For demo purposes, we'll mark as paid immediately
-    await prisma.order.update({
-      where: { id: order.id },
-      data: {
-        status: 'processing',
-        paymentStatus: 'paid'
-      }
-    });
+    if (orderError) {
+      console.error('Error creating order:', orderError);
+      throw orderError;
+    }
+
+    const orderItems = cart.map((item: any) => ({
+      order_id: order.id,
+      product_id: item.id,
+      product_name: item.name,
+      product_img: item.img,
+      price: parseFloat(item.price.toString()),
+      quantity: item.quantity,
+    }));
+
+    const { error: itemsError } = await supabaseAdmin.from('order_items').insert(orderItems);
+    if (itemsError) {
+      console.error('Error creating order items:', itemsError);
+      throw itemsError;
+    }
+
+    const { data: updatedOrder, error: updateError } = await supabaseAdmin
+      .from('orders')
+      .update({ status: 'processing', payment_status: 'paid' })
+      .eq('id', order.id)
+      .select()
+      .single();
+
+    if (updateError) {
+      console.error('Error updating order status:', updateError);
+      throw updateError;
+    }
 
     console.log(`[Checkout] Order created successfully: ${orderNumber}`);
 
     return NextResponse.json({
       success: true,
       order: {
-        id: order.id,
-        orderNumber: order.orderNumber,
-        total: order.total,
-        status: order.status,
-        paymentStatus: order.paymentStatus,
-        createdAt: order.createdAt
-      }
+        id: updatedOrder.id,
+        orderNumber: updatedOrder.order_number,
+        total: updatedOrder.total,
+        status: updatedOrder.status,
+        paymentStatus: updatedOrder.payment_status,
+        createdAt: updatedOrder.created_at,
+      },
     });
-
   } catch (error) {
     console.error('[Checkout] Error processing order:', error);
-    return NextResponse.json(
-      { error: 'Failed to process order' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to process order' }, { status: 500 });
   }
 }
 
-// GET endpoint to retrieve user's orders
 export async function GET() {
   try {
-    // Get user session
-    const session = await getServerSession(authOptions) as { user?: { email?: string; name?: string } } | null;
-    
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+    }
+    const userId = session.user.id;
+
+    const { data: orders, error: ordersError } = await supabaseAdmin
+      .from('orders')
+      .select('*, order_items(*)')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (ordersError) {
+      console.error('Error fetching orders:', ordersError);
+      throw ordersError;
     }
 
-    // Get user from database or create if OAuth user doesn't exist
-    let user = await prisma.user.findUnique({
-      where: { email: session.user.email }
-    });
-
-    if (!user) {
-      // Create user for OAuth users who don't exist in database yet
-      user = await prisma.user.create({
-        data: {
-          email: session.user.email,
-          name: session.user.name || 'OAuth User',
-          password: '' // OAuth users don't have passwords
-        }
-      });
-      console.log(`[Checkout] Created new OAuth user: ${user.email}`);
-    }
-
-    // Get user's orders
-    const orders = await prisma.order.findMany({
-      where: { userId: user.id },
-      include: {
-        orderItems: true
-      },
-      orderBy: {
-        createdAt: 'desc'
-      }
-    });
-
-    return NextResponse.json({
-      success: true,
-      orders
-    });
-
+    return NextResponse.json({ success: true, orders });
   } catch (error) {
     console.error('[Checkout] Error fetching orders:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch orders' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to fetch orders' }, { status: 500 });
   }
 }

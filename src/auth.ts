@@ -1,7 +1,6 @@
 import { NextAuthOptions, getServerSession as getNextAuthServerSession } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
-import { PrismaAdapter } from '@next-auth/prisma-adapter';
-import { prisma } from '@/lib/prisma';
+import { supabaseAdmin } from '@/lib/supabase';
 
 // Extend the default session type to include the user ID
 declare module 'next-auth' {
@@ -17,7 +16,7 @@ declare module 'next-auth' {
 
 // Configure NextAuth options
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
+
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,

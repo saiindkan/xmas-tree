@@ -2,58 +2,37 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
-import { PrismaClient } from '@prisma/client';
+import { supabaseAdmin } from '@/lib/supabase';
 
-const prisma = new PrismaClient();
+
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { orderNumber: string } }
 ) {
   try {
-    // Get user session
-    const session = await getServerSession(authOptions) as { user?: { email?: string; name?: string } } | null;
-    
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
+    const userId = session.user.id;
 
-    // Get user from database or create if OAuth user doesn't exist
-    let user = await prisma.user.findUnique({
-      where: { email: session.user.email }
-    });
+    // Get order by order number and user from Supabase
+    const { data: order, error } = await supabaseAdmin
+      .from('orders')
+      .select(`
+        *,
+        order_items (*),
+        users (name, email)
+      `)
+      .eq('order_number', params.orderNumber)
+      .eq('user_id', userId)
+      .single();
 
-    if (!user) {
-      // Create user for OAuth users who don't exist in database yet
-      user = await prisma.user.create({
-        data: {
-          email: session.user.email,
-          name: session.user.name || 'OAuth User',
-          password: '' // OAuth users don't have passwords
-        }
-      });
-      console.log(`[Orders] Created new OAuth user: ${user.email}`);
+    if (error && error.code !== 'PGRST116') { // PGRST116 means no rows found
+        console.error('[Orders] Error fetching order:', error);
+        throw error;
     }
-
-    // Get order by order number and user
-    const order = await prisma.order.findFirst({
-      where: {
-        orderNumber: params.orderNumber,
-        userId: user.id
-      },
-      include: {
-        orderItems: true,
-        user: {
-          select: {
-            name: true,
-            email: true
-          }
-        }
-      }
-    });
 
     if (!order) {
       return NextResponse.json(

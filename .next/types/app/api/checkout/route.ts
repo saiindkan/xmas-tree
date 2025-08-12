@@ -1,4 +1,4 @@
-// File: /Users/snaga310/Desktop/workspace/xmas-tree/src/app/api/checkout/route.ts
+// File: /Users/anonymous/Downloads/xmas-tree/src/app/api/checkout/route.ts
 import * as entry from '../../../../../src/app/api/checkout/route.js'
 import type { NextRequest } from 'next/server.js'
 

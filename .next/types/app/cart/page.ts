@@ -1,4 +1,4 @@
-// File: /Users/snaga310/Desktop/workspace/xmas-tree/src/app/cart/page.tsx
+// File: /Users/anonymous/Downloads/xmas-tree/src/app/cart/page.tsx
 import * as entry from '../../../../src/app/cart/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
