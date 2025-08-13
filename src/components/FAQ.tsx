@@ -2,7 +2,7 @@ export default function FAQ() {
   return (
     <section className="w-full bg-white border-t border-gray-100 py-12">
       <div className="max-w-4xl mx-auto px-4">
-        <h2 className="text-2xl md:text-3xl font-extrabold text-center text-green-900 mb-8">Frequently Asked Questions</h2>
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-center text-green-900 mb-8">Frequently Asked Questions</h2>
         <div className="space-y-6">
           <div>
             <div className="font-semibold text-green-800 mb-1">How fast is shipping?</div>

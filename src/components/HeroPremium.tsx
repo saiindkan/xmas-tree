@@ -8,24 +8,24 @@ export default function HeroPremium() {
       }}
     >
       <div className="absolute inset-0 bg-black/30" />
-      <div className="relative z-10 flex flex-col items-center justify-center w-full">
-        <div className="backdrop-blur bg-white/80 rounded-lg shadow-xl px-8 py-10 mx-auto text-center max-w-lg border border-white/60">
-          <h1 className="text-3xl md:text-4xl font-extrabold text-green-900 mb-4">
+      <div className="relative z-10 flex flex-col items-center justify-center w-full px-4">
+        <div className="backdrop-blur bg-white/80 rounded-lg shadow-xl px-6 sm:px-8 py-8 sm:py-10 mx-auto text-center max-w-lg border border-white/60">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-green-900 mb-4">
             Discover America's Finest Christmas Trees
           </h1>
-          <p className="text-lg md:text-xl text-green-800 mb-6 font-medium">
+          <p className="text-base sm:text-lg md:text-xl text-green-800 mb-6 font-medium">
             Celebrate the Season with Style
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="/products"
-              className="px-8 py-3 rounded-full bg-green-700 text-white font-semibold text-base shadow hover:bg-green-800 transition"
+              className="w-full sm:w-auto px-8 py-3 rounded-full bg-green-700 text-white font-semibold text-base shadow hover:bg-green-800 transition"
             >
               Shop The Sale
             </a>
             <a
               href="/deals"
-              className="px-8 py-3 rounded-full bg-[#7a2d1b] text-white font-semibold text-base shadow hover:bg-[#9b3e26] transition"
+              className="w-full sm:w-auto px-8 py-3 rounded-full bg-[#7a2d1b] text-white font-semibold text-base shadow hover:bg-[#9b3e26] transition"
             >
               Shop Clearance
             </a>

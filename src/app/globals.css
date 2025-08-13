@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom Swiper Styles */
+.swiper-button-next::after, 
+.swiper-button-prev::after {
+  font-size: 1.25rem !important; /* 20px */
+  color: white;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: white !important;
+}
+
 body {
   font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
   background: #fff;

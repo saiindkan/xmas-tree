@@ -13,9 +13,19 @@ const nextConfig = {
   // assetPrefix: isDev ? '' : `/${repo}/`,
   reactStrictMode: true,
   images: {
-    domains: [
-      'lh3.googleusercontent.com',
-      'images.unsplash.com'
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'nyykggssyasvxrtjhhhb.supabase.co',
+      },
     ],
   },
   webpack: (config) => {
@@ -41,7 +51,7 @@ const nextConfig = {
               script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://*.stripe.com https://b.stripecdn.com;
               script-src-elem 'self' 'unsafe-inline' https://js.stripe.com https://*.stripe.com https://b.stripecdn.com;
               style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://b.stripecdn.com;
-              img-src 'self' data: https://*.stripe.com https://*.googleusercontent.com https://q.stripe.com https://images.unsplash.com;
+              img-src 'self' data: https://*.stripe.com https://*.googleusercontent.com https://q.stripe.com https://images.unsplash.com https://nyykggssyasvxrtjhhhb.supabase.co;
               font-src 'self' data: https://fonts.gstatic.com https://b.stripecdn.com;
               connect-src 'self' https://api.stripe.com https://*.stripe.com https://b.stripecdn.com;
               frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://b.stripecdn.com;

@@ -3,69 +3,61 @@ const products = [
   {
     id: 1,
     name: "King Noble Fir",
-    img: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=400&q=80",
+    images: [
+      "https://nyykggssyasvxrtjhhhb.supabase.co/storage/v1/object/public/Product%20Images/Noble%20Fir%20Christmas%20Tree%20with%20Full%20Decoration.jpg",
+      "https://nyykggssyasvxrtjhhhb.supabase.co/storage/v1/object/public/Product%20Images/Noble%20Fir%20Christmas%20Tree%20in%20a%20Farm.webp",
+      "https://nyykggssyasvxrtjhhhb.supabase.co/storage/v1/object/public/Product%20Images/Noble%20Fir%20Christmas%20Tree%20with%20No%20Decoration.webp"
+    ],
     height: "6.5' - 9'",
     shape: "Full",
     light: "LED",
     badge: "Best Seller",
-    price: 399,
+    price: 200,
     description: "A classic, ultra-realistic fir with lush, full branches. Our most popular tree!",
   },
   {
     id: 2,
-    name: "Queen Flock",
-    img: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
+    name: "Douglas Fir",
+    images: [
+      "https://nyykggssyasvxrtjhhhb.supabase.co/storage/v1/object/public/Product%20Images/Douglas%20Fir%20Fully%20Decorated%20Christmas%20Tree.webp",
+      "https://nyykggssyasvxrtjhhhb.supabase.co/storage/v1/object/public/Product%20Images/Douglas%20Fir%20Partially%20Decorated%20Christmas%20Tree.webp",
+      "https://nyykggssyasvxrtjhhhb.supabase.co/storage/v1/object/public/Product%20Images/Douglas%20Fir%20Christmas%20Tree%20in%20a%20Farm.jpg"
+    ],
     height: "6.5' - 12'",
     shape: "Slim",
     light: "Unlit",
     badge: "Limited Stock",
-    price: 499,
+    price: 220,
     description: "A snowy, flocked tree for a winter wonderland look. Limited stock!",
   },
   {
     id: 3,
     name: "King Fraser Fir",
-    img: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=400&q=80",
-    height: "6.5' - 12'",
-    shape: "Full",
-    light: "LED",
-    badge: "",
-    price: 459,
-    description: "Realistic Fraser Fir with built-in LED lights and a classic holiday silhouette.",
-  },
-  {
-    id: 4,
-    name: "Mini Tabletop Tree",
-    img: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80",
-    height: "2'",
-    shape: "Slim",
-    light: "Unlit",
-    badge: "",
-    price: 59,
-    description: "Perfect for desks or apartments. Add a little Christmas anywhere!",
-  },
-  {
-    id: 6,
-    name: "Test Ornament",
-    img: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=400&q=80",
-    height: "Small",
-    shape: "Round",
-    light: "N/A",
-    badge: "Test Item",
-    price: 1,
-    description: "A $1 test ornament for testing the checkout process. Perfect for trying out the payment flow!",
-  },
-  {
-    id: 5,
-    name: "Luxury Noble Fir",
-    img: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
+    images: [
+      "https://nyykggssyasvxrtjhhhb.supabase.co/storage/v1/object/public/Product%20Images/Fraser%20Fir%20Fully%20Decorated.webp",
+      "https://nyykggssyasvxrtjhhhb.supabase.co/storage/v1/object/public/Product%20Images/Fraser%20Fir%20Partially%20Decorated.webp",
+      "https://nyykggssyasvxrtjhhhb.supabase.co/storage/v1/object/public/Product%20Images/Fraser%20Fir%20No%20Decoration.webp"
+    ],
     height: "8' - 10'",
     shape: "Full",
     light: "LED",
-    badge: "",
-    price: 699,
-    description: "Our most luxurious tree, with extra fullness and height for grand spaces.",
+    price: 230,
+    description: "Features a robust profile with dense, two-toned green needles for a lifelike appearance.",
   },
+  {
+    id: 4,
+    name: "Balsam Fir",
+    images: [
+      "https://nyykggssyasvxrtjhhhb.supabase.co/storage/v1/object/public/Product%20Images/Balsam%20Fir%20Fully%20Decorated%20Christams%20Tree.jpg",
+      "https://nyykggssyasvxrtjhhhb.supabase.co/storage/v1/object/public/Product%20Images/Balsam%20Fir%20Partially%20Decorated.jpg",
+      "https://nyykggssyasvxrtjhhhb.supabase.co/storage/v1/object/public/Product%20Images/Balsam%20Fir%20Christmas%20Tree%20in%20a%20Farm.jpg"
+    ],
+    height: "6.5' - 9'",
+    shape: "Slim",
+    light: "Unlit",
+    price: 250,
+    description: "A slender tree perfect for smaller spaces, with a traditional, fragrant profile.",
+  }
 ];
 
 export default products;
