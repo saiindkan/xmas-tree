@@ -1,0 +1,10 @@
+2:I[9107,[],"ClientPageRoot"]
+3:I[6944,["605","static/chunks/605-6e3daae0b08547aa.js","648","static/chunks/648-7ef3455539aebdc3.js","346","static/chunks/app/account/page-d930c8f79fae23da.js"],"default",1]
+4:I[4707,[],""]
+5:I[6423,[],""]
+6:I[2938,["605","static/chunks/605-6e3daae0b08547aa.js","648","static/chunks/648-7ef3455539aebdc3.js","185","static/chunks/app/layout-c5a904ef6a961aa5.js"],"default",1]
+7:I[376,["601","static/chunks/app/error-874066a83bad05fa.js"],"default"]
+8:{}
+0:["zIvbfi-U7bcVIH94YY3M7",[[["",{"children":["account",{"children":["__PAGE__",{}]}]},"$undefined","$undefined",true],["",{"children":["account",{"children":["__PAGE__",{},[["$L1",["$","$L2",null,{"props":{"params":{},"searchParams":{}},"Component":"$3"}],null],null],null]},[null,["$","$L4",null,{"parallelRouterKey":"children","segmentPath":["children","account","children"],"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","notFoundStyles":"$undefined"}]],null]},[[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/92451d2b321c48a5.css","precedence":"next","crossOrigin":"$undefined"}]],["$","$L6",null,{"children":["$","$L4",null,{"parallelRouterKey":"children","segmentPath":["children"],"error":"$7","errorStyles":[],"errorScripts":[],"template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":["$","main",null,{"className":"flex flex-col items-center justify-center min-h-screen bg-yellow-50 text-yellow-900","children":[["$","h1",null,{"className":"text-4xl font-bold mb-4","children":"404 - Not Found"}],["$","p",null,{"className":"mb-6","children":"Sorry, the page you are looking for does not exist."}],["$","a",null,{"href":"/","className":"px-6 py-2 bg-yellow-700 text-white rounded hover:bg-yellow-800 transition","children":"Go Home"}]]}],"notFoundStyles":[]}],"params":"$8"}]],null],null],["$L9",null]]]]
+9:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","1",{"charSet":"utf-8"}]]
+1:null

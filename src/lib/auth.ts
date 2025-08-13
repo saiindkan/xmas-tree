@@ -1,31 +1,19 @@
+
+
 import GoogleProvider from "next-auth/providers/google";
-import FacebookProvider from "next-auth/providers/facebook";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 import { supabaseAdmin } from '@/lib/supabase';
 import { type AuthOptions } from "next-auth";
 
+
+
 export const authOptions: AuthOptions = {
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      authorization: {
-        params: {
-          prompt: "select_account",
-        },
-      },
-    }),
-    FacebookProvider({
-      clientId: process.env.FACEBOOK_CLIENT_ID!,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
-      authorization: {
-        params: {
-          scope: "email",
-          auth_type: "rerequest", // Always prompt for permissions
-        },
-      },
-    }),
+    // GoogleProvider({
+    //   clientId: process.env.GOOGLE_CLIENT_ID!,
+    //   clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    // }),
     CredentialsProvider({
       name: "credentials",
       credentials: {
@@ -133,62 +121,7 @@ export const authOptions: AuthOptions = {
         account: account?.provider 
       });
 
-      if (account?.provider === "google" || account?.provider === "facebook") {
-        try {
-          const { data: existingUser, error: userError } = await supabaseAdmin
-            .from('users')
-            .select('id')
-            .eq('email', user.email!)
-            .single();
 
-          if (userError && userError.code !== 'PGRST116') { // PGRST116 = no rows found
-            console.error("[NextAuth] Error checking for Supabase user:", userError);
-            return false; // Prevent sign-in on error
-          }
-
-          if (!existingUser) {
-            console.log("[NextAuth] Creating new auth user from OAuth:", user.email);
-            const { data: newAuthUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
-              email: user.email!,
-              email_confirm: true, // Assuming OAuth email is verified
-              user_metadata: {
-                name: user.name,
-                avatar_url: user.image,
-              },
-            });
-
-            if (createError) {
-              console.error("[NextAuth] Error creating Supabase auth user:", createError);
-              return false; // Prevent sign-in on error
-            }
-
-            console.log("[NextAuth] Creating new public user profile for:", user.email);
-            const { error: insertError } = await supabaseAdmin
-              .from('users')
-              .insert({
-                id: newAuthUser.user.id,
-                name: user.name,
-                email: user.email,
-              });
-            
-            if (insertError) {
-                console.error("[NextAuth] Error creating public user profile:", insertError);
-                // Rollback auth user creation
-                await supabaseAdmin.auth.admin.deleteUser(newAuthUser.user.id);
-                return false; // Prevent sign-in
-            }
-
-            // Attach the new user's ID to the user object for the JWT callback
-            user.id = newAuthUser.user.id;
-
-          } else {
-            console.log("[NextAuth] Existing OAuth user found:", user.email);
-          }
-        } catch (error) {
-          console.error("[NextAuth] Error handling OAuth user:", error);
-          return false;
-        }
-      }
       return true;
     },
   },

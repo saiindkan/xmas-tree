@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
-import { getServerSession } from '@/auth';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/auth';
 
 export async function POST(request: Request) {
   try {
-    const session = await getServerSession();
+    const session = await getServerSession(authOptions);
     if (!session?.user?.email) {
       return new NextResponse('Unauthorized', { status: 401 });
     }

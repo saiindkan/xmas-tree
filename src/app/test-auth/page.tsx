@@ -1,8 +1,13 @@
 'use client';
 
+import { createBrowserClient } from '@supabase/ssr';
 import { useSession, signIn, signOut } from 'next-auth/react';
 
-export default function TestAuth() {
+export default function TestAuthPage() {
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
   const { data: session, status } = useSession();
 
   if (status === 'loading') {
@@ -37,18 +42,15 @@ export default function TestAuth() {
           
           <div className="space-y-2">
             <button
-              onClick={() => signIn('google')}
+              onClick={async () => {
+              await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: `${location.origin}/auth/callback` } });
+            }}
               className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
             >
               Sign In with Google
             </button>
             
-            <button
-              onClick={() => signIn('facebook')}
-              className="w-full bg-blue-800 text-white py-2 px-4 rounded hover:bg-blue-900"
-            >
-              Sign In with Facebook
-            </button>
+
             
             <button
               onClick={() => signIn('credentials')}
