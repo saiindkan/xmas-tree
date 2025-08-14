@@ -1,37 +1,37 @@
 {
   "../node_modules/@supabase/auth-js/dist/module/lib/helpers.js -> @supabase/node-fetch": {
-    "id": 485,
+    "id": "../node_modules/@supabase/auth-js/dist/module/lib/helpers.js -> @supabase/node-fetch",
     "files": []
   },
   "../node_modules/@supabase/functions-js/dist/module/helper.js -> @supabase/node-fetch": {
-    "id": 485,
+    "id": "../node_modules/@supabase/functions-js/dist/module/helper.js -> @supabase/node-fetch",
     "files": []
   },
   "../node_modules/@supabase/realtime-js/dist/module/RealtimeClient.js -> @supabase/node-fetch": {
-    "id": 485,
+    "id": "../node_modules/@supabase/realtime-js/dist/module/RealtimeClient.js -> @supabase/node-fetch",
     "files": []
   },
   "../node_modules/@supabase/storage-js/dist/module/lib/helpers.js -> @supabase/node-fetch": {
-    "id": 485,
+    "id": "../node_modules/@supabase/storage-js/dist/module/lib/helpers.js -> @supabase/node-fetch",
     "files": []
   },
   "app/layout.tsx -> ../components/ChristmasCursor": {
-    "id": 7865,
+    "id": "app/layout.tsx -> ../components/ChristmasCursor",
     "files": [
-      "static/chunks/865.d3a3e50c0e826033.js"
+      "static/chunks/_app-pages-browser_src_components_ChristmasCursor_tsx.js"
     ]
   },
   "app/layout.tsx -> ../components/ChristmasMusicPlayer": {
-    "id": 2676,
+    "id": "app/layout.tsx -> ../components/ChristmasMusicPlayer",
     "files": [
-      "static/css/02aa803ddfa4394e.css",
-      "static/chunks/676.97e968d787f94835.js"
+      "static/css/_app-pages-browser_src_components_ChristmasMusicPlayer_tsx.css",
+      "static/chunks/_app-pages-browser_src_components_ChristmasMusicPlayer_tsx.js"
     ]
   },
   "app/layout.tsx -> ../components/Snowflakes": {
-    "id": 6751,
+    "id": "app/layout.tsx -> ../components/Snowflakes",
     "files": [
-      "static/chunks/751.16f7aec80344e853.js"
+      "static/chunks/_app-pages-browser_src_components_Snowflakes_tsx.js"
     ]
   }
 }
