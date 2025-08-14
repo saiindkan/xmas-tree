@@ -1,6 +1,6 @@
 export default function PromoBar() {
   return (
-    <div className="w-full bg-gradient-to-r from-green-900 via-red-700 to-green-900 text-white py-3 px-4 text-center relative flex items-center justify-center overflow-hidden">
+    <div className="w-full bg-gradient-to-r from-green-900 via-red-700 to-green-900 text-white py-3 px-4 text-center relative flex items-center justify-center overflow-hidden min-h-[60px]">
       {/* Left Ribbon */}
       <svg className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 md:w-14 md:h-14" viewBox="0 0 48 48" fill="none"><path d="M4 24 Q12 12 24 24 T44 24" stroke="#e3342f" strokeWidth="4" fill="none"/><circle cx="8" cy="24" r="3" fill="#facc15"/><circle cx="40" cy="24" r="3" fill="#facc15"/></svg>
       {/* Sparkles/Ornaments Left */}

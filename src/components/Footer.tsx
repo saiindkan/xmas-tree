@@ -21,9 +21,9 @@ export default function Footer() {
         </div>
         <div className="flex flex-col gap-2">
           <span className="font-semibold mb-1">Newsletter</span>
-          <form className="flex gap-2">
-            <input type="email" placeholder="Your email address" className="px-3 py-2 border border-gray-300 rounded focus:outline-none" />
-            <button type="submit" className="px-4 py-2 bg-green-700 text-white rounded hover:bg-green-800 transition">Subscribe</button>
+          <form className="flex flex-col sm:flex-row gap-2">
+            <input type="email" placeholder="Your email address" className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500" />
+            <button type="submit" className="w-full sm:w-auto px-4 py-2 bg-green-700 text-white rounded hover:bg-green-800 transition">Subscribe</button>
           </form>
         </div>
       </div>

@@ -2,7 +2,6 @@
 
 import type { ReactNode } from "react";
 import "./globals.css";
-import "../styles/globals.css";
 import PromoBar from "../components/PromoBar";
 import Navbar from "../components/Navbar";
 import TrustBar from "../components/TrustBar";
@@ -20,15 +19,19 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className="bg-white min-h-screen text-green-900 font-sans">
+      <body className="bg-white min-h-screen text-green-900 font-sans flex flex-col">
         <SessionProvider>
           <CartProvider>
-            <PromoBar />
-            <Navbar />
-            <TrustBar />
-            {children}
-            <PressBar />
-            <Footer />
+            <div className="flex flex-col flex-grow">
+              <PromoBar />
+              <Navbar />
+              <TrustBar />
+              <main className="flex-grow">
+                {children}
+              </main>
+              <PressBar />
+              <Footer />
+            </div>
           </CartProvider>
         </SessionProvider>
       </body>
