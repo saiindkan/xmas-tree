@@ -1,26 +1,36 @@
 'use client';
 
 import { useState } from 'react';
-import { createClient } from '@/lib/supabase-client';
+
 import toast from 'react-hot-toast';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const supabase = createClient();
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${location.origin}/auth/reset-password`,
-    });
+        try {
+      const response = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
 
-    if (error) {
-      toast.error(error.message);
-    } else {
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Something went wrong');
+      }
+
       toast.success('Password reset link sent! Check your email.');
+    } catch (error: any) {
+      toast.error(error.message);
     }
 
     setIsSubmitting(false);

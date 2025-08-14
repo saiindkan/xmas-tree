@@ -5,6 +5,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 import { supabaseAdmin } from '@/lib/supabase';
 import { type AuthOptions } from "next-auth";
+import { sendEmail } from './email';
 
 
 
@@ -94,6 +95,57 @@ export const authOptions: AuthOptions = {
   pages: {
     signIn: "/auth/signin",
     error: "/auth/error",
+  },
+  events: {
+    async signIn({ user }) {
+      if (user.email) {
+        try {
+          const loginSubject = '🔒 Successful Login to Indkan Christmas Tree Store Account';
+          const loginTime = new Date().toLocaleString();     
+          const loginText = `Hello ${user.name || 'Valued Customer'},
+
+We noticed a successful login to your Indkan Christmas Tree Store account.
+
+Details of this login:
+- Time: ${loginTime}
+
+Best regards,
+The Indkan Christmas Tree Store Security Team`;
+
+          const loginHtml = `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
+              <h2 style="color: #2e7d32;">🔒 Successful Login Detected</h2>
+              
+              <p>Hello ${user.name || 'Valued Customer'},</p>
+              
+              <p>We noticed a successful login to your Indkan Christmas Tree Store account.</p>
+
+              <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #2e7d32;">
+                <h3 style="margin-top: 0; color: #2e7d32;">Login Details</h3>
+                <p><strong>Time:</strong> ${loginTime}</p>
+              </div>
+              
+              
+              <p style="color: #666; font-size: 0.9em;">For security reasons, this is an automated message. Please do not reply to this email.</p>
+              
+              <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #777;">
+                <p>© ${new Date().getFullYear()} Indkan Christmas Tree Store. All rights reserved.</p>
+                <p>This email was sent to ${user.email} as part of our security notifications.</p>
+              </div>
+            </div>
+          `;
+
+          await sendEmail({
+            to: user.email,
+            subject: loginSubject,
+            text: loginText,
+            html: loginHtml
+          });
+        } catch (error) {
+          console.error('Failed to send login email:', error);
+        }
+      }
+    }
   },
   callbacks: {
     async jwt({ token, user }) {
