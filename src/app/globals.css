@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Christmas theme colors */
+  --christmas-red: #e63946;
+  --christmas-green: #2a9d8f;
+  --christmas-gold: #ffd700;
+  --christmas-silver: #c0c0c0;
+  --christmas-dark-green: #1b5e57;
+  --christmas-light: #f8f9fa;
+}
+
 /* Custom Swiper Styles */
 .swiper-button-next::after, 
 .swiper-button-prev::after {
@@ -13,8 +23,39 @@
   background-color: white !important;
 }
 
+/* Hide default cursor and ensure custom cursor works */
+* {
+  cursor: none !important;
+}
+
 body {
   font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
-  background: #fff;
+  background: var(--christmas-light);
   color: #13341c;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  cursor: none !important;
+}
+
+/* Ensure interactive elements have proper cursor */
+a, button, [role="button"], [data-hover-effect] {
+  cursor: none !important;
+}
+
+/* Global Christmas theme styles */
+.christmasBackground {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9f5f4 100%);
+  min-height: 100vh;
+}
+
+/* Twinkling lights effect */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.twinkle {
+  animation: twinkle 2s infinite;
 }

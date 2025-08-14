@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Tree trunk -->
+  <rect x="14" y="26" width="4" height="4" fill="#8B4513"/>
+  
+  <!-- Tree layers -->
+  <path d="M16 2 L28 18 L4 18 Z" fill="#228B22"/>
+  <path d="M16 8 L24 20 L8 20 Z" fill="#228B22"/>
+  <path d="M16 14 L20 22 L12 22 Z" fill="#228B22"/>
+  
+  <!-- Star on top -->
+  <path d="M16 0 L18 6 L24 6 L19 10 L21 16 L16 12 L11 16 L13 10 L8 6 L14 6 Z" fill="#FFD700"/>
+</svg>
