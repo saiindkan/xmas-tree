@@ -3,7 +3,7 @@
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-import { supabaseAdmin } from '@/lib/supabase';
+import { createServerSupabaseAdminClient } from '@/lib/supabase';
 import { type AuthOptions } from "next-auth";
 import { sendEmail } from './email';
 
@@ -38,6 +38,7 @@ export const authOptions: AuthOptions = {
         try {
           console.log("[NextAuth] Looking up user:", email);
           
+          const supabaseAdmin = createServerSupabaseAdminClient();
           const { data, error } = await supabaseAdmin.auth.signInWithPassword({
             email,
             password,

@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase';
+import { createServerSupabaseAdminClient } from '@/lib/supabase';
 import { sendEmail } from '@/lib/email';
 
 export async function POST(req: NextRequest) {
+  const supabaseAdmin = createServerSupabaseAdminClient();
   try {
     const { email } = await req.json();
     if (!email) {

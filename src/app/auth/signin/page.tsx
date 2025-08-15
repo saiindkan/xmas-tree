@@ -1,6 +1,6 @@
 "use client";
 import { signIn } from 'next-auth/react';
-import { createClient } from '@/lib/supabase-client';
+import { createBrowserClient } from '@supabase/ssr';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
@@ -15,7 +15,10 @@ function SignInContent() {
   const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const supabase = createClient();
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
   const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
