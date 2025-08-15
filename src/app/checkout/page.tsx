@@ -4,8 +4,6 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useCart } from '../../context/CartContext';
-import { loadStripe } from '@stripe/stripe-js/pure';
-import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
 // Type definitions
 type BillingInfo = {
@@ -21,56 +19,41 @@ type BillingInfo = {
   country: string;
 };
 
-// Stripe Checkout Form Component
+// Checkout Form Component
 const CheckoutForm = ({ onSuccess }: { onSuccess: () => void }) => {
-  const stripe = useStripe();
-  const elements = useElements();
   const [error, setError] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!stripe || !elements) {
-      return;
-    }
-
-    setIsProcessing(true);
     setError(null);
+    setIsProcessing(true);
 
     try {
-      const { error: stripeError, paymentIntent } = await stripe.confirmPayment({
-        elements,
-        confirmParams: {
-          return_url: `${window.location.origin}/order-confirmation`,
-        },
-        redirect: 'if_required',
-      });
-
-      if (stripeError) {
-        throw stripeError;
-      }
-
-      if (paymentIntent && paymentIntent.status === 'succeeded') {
-        onSuccess();
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      // Handle the order submission here
+      // This is a placeholder for your order processing logic
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      onSuccess();
+    } catch (err: any) {
+      setError(err.message || 'An error occurred while processing your order');
+      console.error('Order error:', err);
+    } finally {
       setIsProcessing(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <PaymentElement />
-      {error && <div className="text-red-600 text-sm mt-2">{error}</div>}
-      <button
-        type="submit"
-        disabled={!stripe || isProcessing}
-        className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        {isProcessing ? 'Processing...' : 'Pay Now'}
-      </button>
+    <form onSubmit={handleSubmit}>
+      <div className="mt-6">
+        {error && <div className="text-red-600 text-sm mb-4">{error}</div>}
+        <button
+          type="submit"
+          disabled={isProcessing}
+          className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isProcessing ? 'Processing...' : 'Place Order'}
+        </button>
+      </div>
     </form>
   );
 };
@@ -84,10 +67,8 @@ export default function CheckoutPage() {
   // State management
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [paymentComplete, setPaymentComplete] = useState(false);
+  const [orderComplete, setOrderComplete] = useState(false);
   const [isSecureConnection, setIsSecureConnection] = useState(true);
-  const [stripePromise, setStripePromise] = useState<Promise<import('@stripe/stripe-js').Stripe | null> | null>(null);
-  const [clientSecret, setClientSecret] = useState('');
   
   // Calculate order totals
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -116,52 +97,18 @@ export default function CheckoutPage() {
     country: 'United States'
   });
 
-  // Initialize Stripe and fetch client secret
+  // Check secure connection
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      // Check for secure connection
       const isHTTPS = window.location.protocol === 'https:';
       const isLocalhost = window.location.hostname === 'localhost' || 
                          window.location.hostname === '127.0.0.1';
       setIsSecureConnection(isHTTPS || isLocalhost);
-      
-      // Load Stripe
-      setStripePromise(loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ''));
-      
-      // Fetch client secret
-      const fetchClientSecret = async () => {
-        try {
-          const response = await fetch('/api/create-payment-intent', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ items: cart }),
-          });
-          
-          if (!response.ok) {
-            throw new Error('Failed to create payment intent');
-          }
-          
-          const data = await response.json();
-          setClientSecret(data.clientSecret);
-        } catch (error) {
-          console.error('Error:', error);
-        } finally {
-          setIsLoading(false);
-        }
-      };
-      
-      if (cart.length > 0) {
-        fetchClientSecret();
-      } else {
-        setIsLoading(false);
-      }
     }
-  }, [cart]);
+  }, []);
 
-  const handlePaymentSuccess = () => {
-    setPaymentComplete(true);
+  const handleOrderSuccess = () => {
+    setOrderComplete(true);
     clearCart();
   };
 
@@ -176,7 +123,7 @@ export default function CheckoutPage() {
     );
   }
 
-  if (cart.length === 0 && !paymentComplete) {
+  if (cart.length === 0 && !orderComplete) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
@@ -205,7 +152,7 @@ export default function CheckoutPage() {
     );
   }
 
-  if (paymentComplete) {
+  if (orderComplete) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="bg-green-50 border-l-4 border-green-400 p-4">
@@ -410,19 +357,7 @@ export default function CheckoutPage() {
           <div className="bg-white p-6 rounded-lg shadow">
             <h2 className="text-xl font-semibold mb-4">Payment</h2>
             <div className="bg-gray-50 p-4 rounded-md">
-              {clientSecret && stripePromise ? (
-                <Elements stripe={stripePromise} options={{ clientSecret }}>
-                  <CheckoutForm onSuccess={handlePaymentSuccess} />
-                </Elements>
-              ) : (
-                <div className="text-center py-8">
-                  <div className="animate-pulse space-y-4">
-                    <div className="h-4 bg-gray-200 rounded w-3/4 mx-auto"></div>
-                    <div className="h-12 bg-gray-200 rounded"></div>
-                    <div className="h-8 bg-gray-200 rounded w-1/2 mx-auto"></div>
-                  </div>
-                </div>
-              )}
+              <CheckoutForm onSuccess={handleOrderSuccess} />
             </div>
           </div>
         </div>
