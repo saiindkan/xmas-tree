@@ -39,35 +39,33 @@ const nextConfig = {
   },
   // Security headers
   async headers() {
-    const isDev = process.env.NODE_ENV !== 'production';
-    const baseDomain = isDev ? 'http://localhost:3000' : 'https://your-production-domain.com';
-    
     return [
       {
         source: '/(.*)',
         headers: [
-          // ✅ Enhanced Content Security Policy
+          // ✅ Unified Content Security Policy
           {
             key: 'Content-Security-Policy',
             value: `
-              default-src 'self' ${isDev ? 'http://localhost:*' : ''};
-              script-src 'self' 'unsafe-inline' 'unsafe-eval';
-              style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-              img-src 'self' data: blob: https://images.unsplash.com https://nyykggssyasvxrtjhhhb.supabase.co;
-              font-src 'self' data: https://fonts.gstatic.com;
-              connect-src 'self' ${isDev ? 'http://localhost:3000' : baseDomain};
-              media-src 'self';
+              default-src 'self';
+              script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://*.stripe.com https://b.stripecdn.com;
+              script-src-elem 'self' 'unsafe-inline' https://js.stripe.com https://*.stripe.com https://b.stripecdn.com;
+              style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://b.stripecdn.com;
+              img-src 'self' data: https://*.stripe.com https://*.googleusercontent.com https://q.stripe.com https://images.unsplash.com https://nyykggssyasvxrtjhhhb.supabase.co;
+              font-src 'self' data: https://fonts.gstatic.com https://b.stripecdn.com;
+              connect-src 'self' https://api.stripe.com https://*.stripe.com https://b.stripecdn.com;
+              frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://b.stripecdn.com;
               object-src 'none';
               base-uri 'self';
-              form-action 'self';
+              form-action 'self' https://b.stripecdn.com;
               frame-ancestors 'self';
-              worker-src 'self' blob:;
-              prefetch-src 'self' ${isDev ? 'http://localhost:*' : ''};
-              ${!isDev ? "upgrade-insecure-requests;" : ""}
-              block-all-mixed-content;
             `.replace(/\s+/g, ' ').trim(),
           },
-          // Additional security headers
+          // Other security headers
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains; preload'
+          },
           {
             key: 'X-Content-Type-Options',
             value: 'nosniff'
@@ -83,42 +81,6 @@ const nextConfig = {
           {
             key: 'Referrer-Policy',
             value: 'strict-origin-when-cross-origin'
-          },
-          {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=(), payment=()'
-          },
-          {
-            key: 'Cross-Origin-Opener-Policy',
-            value: 'same-origin'
-          },
-          {
-            key: 'Cross-Origin-Resource-Policy',
-            value: 'same-site'
-          },
-          {
-            key: 'Cross-Origin-Embedder-Policy',
-            value: 'require-corp'
-          },
-          {
-            key: 'X-Permitted-Cross-Domain-Policies',
-            value: 'none'
-          },
-          {
-            key: 'X-DNS-Prefetch-Control',
-            value: 'on'
-          },
-          {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=31536000; includeSubDomains; preload'
-          },
-          {
-            key: 'Expect-CT',
-            value: 'enforce, max-age=30'
-          },
-          {
-            key: 'Feature-Policy',
-            value: "camera 'none'; microphone 'none'; geolocation 'none'; payment 'none'"
           }
         ],
       },
