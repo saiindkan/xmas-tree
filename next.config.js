@@ -51,7 +51,7 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: `
               default-src 'self' ${isDev ? 'http://localhost:*' : ''};
-              script-src 'self' ${isDev ? "'unsafe-inline' 'unsafe-eval'" : ''};
+              script-src 'self' 'unsafe-inline' 'unsafe-eval';
               style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
               img-src 'self' data: blob: https://images.unsplash.com https://nyykggssyasvxrtjhhhb.supabase.co;
               font-src 'self' data: https://fonts.gstatic.com;
